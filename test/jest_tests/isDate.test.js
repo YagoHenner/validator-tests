@@ -1,4 +1,4 @@
-import isDate from '../lib/isDate'
+import isDate from '../../src/lib/isDate'
 
 describe('isBase64', () => {
  test('Verificar se a data é válida', () => {

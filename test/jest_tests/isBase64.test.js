@@ -1,4 +1,4 @@
-import isBase64 from '../lib/isBase64';
+import isBase64 from '../../src/lib/isBase64';
 
 describe('isBase64', () => {
  test('Verificar se uma string é uma representação válida em Base64', () => {
