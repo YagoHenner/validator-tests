@@ -25,6 +25,13 @@ describe('isDate', () => {
     expect(isDate('23-06-20')).toBe(true);
   });
 
+  test('Verificar função com datas inválidas', () => {
+    expect(isDate('2023/06/220')).toBe(false);
+    expect(isDate('23/06/2440')).toBe(false);
+    expect(isDate('2023-036-20')).toBe(false);
+    expect(isDate('23-06-205')).toBe(false);
+  });
+
   test('Verificar com datas válidas e formatos customizados', () => {
     expect(isDate('20-06-2023', { format: 'DD-MM-YYYY' })).toBe(true);
     expect(isDate('06/20/23', { format: 'MM/DD/YY' })).toBe(true);
