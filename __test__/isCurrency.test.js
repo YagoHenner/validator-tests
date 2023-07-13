@@ -2,12 +2,12 @@ import isCurrency from '../src/lib/isCurrency';
 import assertString from '../src/lib/util/assertString';
 import merge from '../src/lib/util/merge';
 
-jest.mock('./util/assertString', () => ({
+jest.mock('../src/lib/util/assertString', () => ({
   __esModule: true,
   default: jest.fn(),
 }));
 
-jest.mock('./util/merge', () => ({
+jest.mock('../src/lib/util/merge', () => ({
   __esModule: true,
   default: jest.fn((options, defaultOptions) => ({
     ...defaultOptions,

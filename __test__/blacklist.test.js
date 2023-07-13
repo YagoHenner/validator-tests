@@ -1,7 +1,7 @@
 import blacklist from '../src/lib/blacklist';
 import assertString from '../src/lib/util/assertString';
 
-jest.mock('./util/assertString', () => ({
+jest.mock('../src/lib/util/assertString', () => ({
   __esModule: true,
   default: jest.fn(),
 }));
