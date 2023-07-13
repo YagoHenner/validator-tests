@@ -1,13 +1,92 @@
 import isBase64 from '../src/lib/isBase64';
+import assertString from '../src/lib/util/assertString';
+import merge from '../src/lib/util/merge';
+
+jest.mock('./util/assertString', () => ({
+  __esModule: true,
+  default: jest.fn(),
+}));
+
+jest.mock('./util/merge', () => ({
+  __esModule: true,
+  default: jest.fn((options, defaultOptions) => ({
+    ...defaultOptions,
+    ...options,
+  })),
+}));
 
 describe('isBase64', () => {
-  test('Verificar se uma string é uma representação válida em Base64', () => {
-    expect(isBase64('SGVsbG8gd29ybGQh')).toBe(true);
-    expect(isBase64('VGhpcyBpcyBhIGJhc2U2NCBlbmNvZGluZyBzdHJpbmc=')).toBe(true);
+  afterEach(() => {
+    assertString.mockClear();
+    merge.mockClear();
   });
 
-  test('Verificar se uma string não é uma representação válida em Base64', () => {
-    expect(isBase64('Qualquer coisa')).toBe(false);
-    expect(isBase64('Não é Base64')).toBe(false);
+  test('Deve retornar true para uma string base64 válida', () => {
+    const string = 'SGVsbG8gd29ybGQh';
+    const options = {};
+
+    const result = isBase64(string, options);
+
+    expect(result).toBe(true);
+    expect(assertString).toHaveBeenCalledWith(string);
+    expect(merge).toHaveBeenCalledWith(options, {
+      urlSafe: false,
+    });
+  });
+
+  test('Deve retornar false para uma string inválida', () => {
+    const string = 'Hello world';
+    const options = {};
+
+    const result = isBase64(string, options);
+
+    expect(result).toBe(false);
+    expect(assertString).toHaveBeenCalledWith(string);
+    expect(merge).toHaveBeenCalledWith(options, {
+      urlSafe: false,
+    });
+  });
+
+  test('Deve retornar false para string base64 com preenchimento incorreto', () => {
+    const string = 'SGVsbG8gd29ybGQ=';
+    const options = {};
+
+    const result = isBase64(string, options);
+
+    expect(result).toBe(false);
+    expect(assertString).toHaveBeenCalledWith(string);
+    expect(merge).toHaveBeenCalledWith(options, {
+      urlSafe: false,
+    });
+  });
+
+  test('Deve retornar true para string base64 segura para URL', () => {
+    const string = 'SGVsbG8gd29ybGQ';
+    const options = {
+      urlSafe: true,
+    };
+
+    const result = isBase64(string, options);
+
+    expect(result).toBe(true);
+    expect(assertString).toHaveBeenCalledWith(string);
+    expect(merge).toHaveBeenCalledWith(options, {
+      urlSafe: false,
+    });
+  });
+
+  test('Deve retornar false para string base64 segura para URL com caracteres não seguros para URL', () => {
+    const string = 'SGVsbG8gd29ybGQ=';
+    const options = {
+      urlSafe: true,
+    };
+
+    const result = isBase64(string, options);
+
+    expect(result).toBe(false);
+    expect(assertString).toHaveBeenCalledWith(string);
+    expect(merge).toHaveBeenCalledWith(options, {
+      urlSafe: false,
+    });
   });
 });
